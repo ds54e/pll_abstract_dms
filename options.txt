@@ -1,0 +1,26 @@
+// DSim
+-top top
++acc
+-waves waves.vcd
+
+// UVM
+-suppress IneffectiveDynamicCast:MissingTimescale
+-uvm 1.2
++UVM_NO_RELNOTES
++UVM_TESTNAME=simple_test
++UVM_VERBOSITY=UVM_MEDIUM
+
+// RNM
+-define DMS
+rnm_pkg.sv
+
+// DUT
+//-define PLL_TIME_PRECISION=1ps
+//-defparam top.dut.skip_phase_lock=1
+pll_core.sv
+PLL.sv
+
+// Test bench
+pll_if.sv
+my_pkg.sv
+top.sv
