@@ -9,7 +9,7 @@ module top
   import uvm_pkg::*;
   import my_pkg::*;
 
-  parameter realtime clk_period = 100ns;
+  parameter realtime clk_period = 1ns;
   bit clk = 1'b0;
 
   initial begin
@@ -39,7 +39,6 @@ module top
   nreal VCLK; assign intf.vclk = ((VCLK - VSS) > vth);
   nreal LOCK; assign intf.lock = ((LOCK - VSS) > vth);
 `else
-  genvar i;
   wire VSS = intf.vss;
   wire VDD = intf.vdd;
   wire RCLK = intf.rclk;
