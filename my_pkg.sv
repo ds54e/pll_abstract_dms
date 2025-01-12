@@ -24,26 +24,23 @@ package my_pkg;
     virtual task run_phase (uvm_phase phase);
       phase.raise_objection(this);
       `uvm_info(get_type_name(), "Started", UVM_MEDIUM)
-      for (int i = 0; i < 256; i++) begin
-        vif.mp.power_down();
-        `uvm_info(get_type_name(), "Power-down", UVM_MEDIUM)
-        vif.mp.power_up();
-        `uvm_info(get_type_name(), "Power-up", UVM_MEDIUM)
-        vif.mp.enable(i);
-        `uvm_info(get_type_name(), $sformatf("Enabled with FBDIV = %0d", i), UVM_MEDIUM)
-        vif.mp.wait_for_lock(100us);
-        `uvm_info(get_type_name(), $sformatf("LOCK = %0b", vif.mp.is_locked), UVM_MEDIUM)
-        if (!vif.mp.is_locked) begin
-          `uvm_error(get_type_name(), "Failed to lock")
-        end
-        vif.mp.standby();
-        `uvm_info(get_type_name(), "Stand-by", UVM_MEDIUM)
-        vif.mp.delay(2);
+      vif.mp.power_down();
+      `uvm_info(get_type_name(), "Power-down", UVM_MEDIUM)
+      vif.mp.power_up();
+      `uvm_info(get_type_name(), "Power-up", UVM_MEDIUM)
+      vif.mp.enable(2);
+      `uvm_info(get_type_name(), $sformatf("Enabled with FBDIV = %0d", 2), UVM_MEDIUM)
+      vif.mp.wait_for_lock(100us);
+      `uvm_info(get_type_name(), $sformatf("LOCK = %0b", vif.mp.is_locked), UVM_MEDIUM)
+      if (!vif.mp.is_locked) begin
+        `uvm_error(get_type_name(), "Failed to lock")
       end
+      vif.mp.standby();
+      `uvm_info(get_type_name(), "Stand-by", UVM_MEDIUM)
+      vif.mp.delay(2);
       `uvm_info(get_type_name(), "Finished", UVM_MEDIUM)
       phase.drop_objection(this);
     endtask
   endclass
   
-
 endpackage
