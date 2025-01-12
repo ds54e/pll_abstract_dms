@@ -38,23 +38,6 @@ module pll_core #(
     end
   end
 
-  int unsigned n_mult;
-
-  always_comb begin
-    case (state)
-      STAND_BY, ACTIVE: begin
-        if (fbdiv > 0) begin
-          n_mult = fbdiv;
-        end else begin
-          n_mult = 1;
-        end
-      end
-      default: begin
-        n_mult = 0;
-      end
-    endcase
-  end
-
   bit clk_enable;
 
   always_comb begin
@@ -90,6 +73,16 @@ module pll_core #(
         rclk_period <= ($realtime - last_tr);
       end
       last_tr <= $realtime;
+    end
+  end
+
+  int unsigned n_mult;
+
+  always_comb begin
+    if (fbdiv > 0) begin
+      n_mult = fbdiv;
+    end else begin
+      n_mult = 1;
     end
   end
 
