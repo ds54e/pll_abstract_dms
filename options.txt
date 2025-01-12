@@ -11,12 +11,13 @@
 +UVM_VERBOSITY=UVM_MEDIUM
 
 // RNM
--define DMS
-rnm_pkg.sv
+//-define DMS
+//rnm_pkg.sv
 
 // DUT
 //-define PLL_TIME_PRECISION=1ps
 //-defparam top.dut.skip_phase_lock=1
+-defparam top.dut.freq_acq_time=10e-9
 pll_core.sv
 PLL.sv
 
