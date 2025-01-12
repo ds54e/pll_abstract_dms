@@ -1,6 +1,6 @@
 module pll_core #(
   parameter realtime vclk_initial_period = 1ns,
-  parameter realtime freq_acq_time = 1us,
+  parameter realtime freq_lock_time = 1us,
   parameter bit skip_phase_lock = 1'b0,
   parameter realtime delta_t_tol = 10ps,
   parameter int unsigned lock_count_max = 10,
@@ -102,14 +102,14 @@ module pll_core #(
 
   bit var_vclk;
   realtime delta_t;
-  bit freq_acq_done;
+  bit freq_lock;
 
   always @(posedge rclk, negedge clk_enable_sync) begin
     if (!clk_enable_sync) begin
       delta_t <= 0;
     end else begin
       @(posedge var_vclk);
-      if (freq_acq_done) begin
+      if (freq_lock) begin
         delta_t <= ($realtime - last_tr);
       end else begin
         delta_t <= 0;
@@ -118,7 +118,7 @@ module pll_core #(
   end
 
   realtime t_vclk_start;
-  realtime t_freq_acq_start;
+  realtime t_freq_lock_start;
   realtime vclk_period;
   real tdc_gain;
   realtime tdc_out;
@@ -130,20 +130,20 @@ module pll_core #(
       fork begin
         forever begin
           if (vclk_target_period > 0) begin
-            if (t_freq_acq_start == 0) begin
-              t_freq_acq_start = $realtime;
+            if (t_freq_lock_start == 0) begin
+              t_freq_lock_start = $realtime;
             end
-            if ($realtime < (t_vclk_start + freq_acq_time)) begin
-              freq_acq_done = 1'b0;
+            if ($realtime < (t_vclk_start + freq_lock_time)) begin
+              freq_lock = 1'b0;
               vclk_period = (
                 vclk_initial_period + (
                   (vclk_target_period - vclk_initial_period) * (
-                    ($realtime - t_freq_acq_start) / (freq_acq_time - (t_freq_acq_start - t_vclk_start))
+                    ($realtime - t_freq_lock_start) / (freq_lock_time - (t_freq_lock_start - t_vclk_start))
                   )
                 )
               );
             end else begin
-              freq_acq_done = 1'b1;
+              freq_lock = 1'b1;
               if (skip_phase_lock) begin
                 tdc_out = 0;
               end else begin
@@ -167,10 +167,10 @@ module pll_core #(
       disable fork;
     end join
     t_vclk_start = 0;
-    t_freq_acq_start = 0;
+    t_freq_lock_start = 0;
     var_vclk = 1'b0;
     vclk_period = 0;
-    freq_acq_done = 1'b0;
+    freq_lock = 1'b0;
     tdc_out = 0;
   end
 
@@ -180,9 +180,9 @@ module pll_core #(
 
   always_comb begin
     if (skip_phase_lock) begin
-      lock_async = freq_acq_done;
+      lock_async = freq_lock;
     end else begin
-      lock_async = (freq_acq_done && (delta_t < delta_t_tol));
+      lock_async = (freq_lock && (delta_t < delta_t_tol));
     end
   end
 
