@@ -9,7 +9,7 @@ module PLL
   parameter real vth = 0.5,
 `endif
   parameter realtime vclk_initial_period = 1ns,
-  parameter realtime freq_acq_time = 1us,
+  parameter realtime freq_lock_time = 1us,
   parameter bit skip_phase_lock = 1'b0,
   parameter realtime delta_t_tol = 10ps,
   parameter int unsigned lock_count_max = 10,
@@ -72,7 +72,7 @@ module PLL
 
   pll_core #(
     .vclk_initial_period(vclk_initial_period),
-    .freq_acq_time(freq_acq_time),
+    .freq_lock_time(freq_lock_time),
     .skip_phase_lock(skip_phase_lock),
     .delta_t_tol(delta_t_tol),
     .lock_count_max(lock_count_max),
