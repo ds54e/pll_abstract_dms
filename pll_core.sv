@@ -102,20 +102,24 @@ module pll_core #(
 
   bit var_vclk;
   realtime delta_t;
+  bit freq_acq_done;
 
   always @(posedge rclk, negedge clk_enable_sync) begin
     if (!clk_enable_sync) begin
       delta_t <= 0;
     end else begin
       @(posedge var_vclk);
-      delta_t <= ($realtime - last_tr);
+      if (freq_acq_done) begin
+        delta_t <= ($realtime - last_tr);
+      end else begin
+        delta_t <= 0;
+      end
     end
   end
 
   realtime t_vclk_start;
   realtime t_freq_acq_start;
   realtime vclk_period;
-  bit freq_acq_done;
   real tdc_gain;
   realtime tdc_out;
 
