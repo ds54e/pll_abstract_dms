@@ -17,7 +17,7 @@
 // DUT
 //-define PLL_TIME_PRECISION=1ps
 //-defparam top.dut.skip_phase_lock=1
--defparam top.dut.freq_acq_time=10e-9
+-defparam top.dut.freq_lock_time=10e-9
 pll_core.sv
 PLL.sv
 
