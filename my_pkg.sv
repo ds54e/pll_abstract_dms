@@ -14,7 +14,7 @@ package my_pkg;
       super.new(name, parent);
     endfunction
 
-	  virtual function void build_phase (uvm_phase phase);
+    virtual function void build_phase (uvm_phase phase);
       super.build_phase(phase);
       if (!uvm_config_db#(virtual pll_if)::get(this, "", "vif", vif)) begin
         `uvm_fatal(get_type_name(), "Failed to get vif")
